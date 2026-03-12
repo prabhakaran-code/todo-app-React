@@ -8,11 +8,15 @@ import axios from "axios";
 function TodoList() {
   const [todos, setTodos] = useState<TodoType[]>([]);
 
+  // ADD TODO
   const addTodo = async (todo: TodoType) => {
-    if (!todo.text || /^\s*$/.test(todo.text)) return;
+    if (!todo.text || /^\s*$/.test(todo.text)) {
+      toast.error("Todo cannot be empty");
+      return;
+    }
 
     const isDuplicate = todos.some(
-      (t) => t.text.toLowerCase().trim() === todo.text.toLowerCase().trim(),
+      (t) => t.text.toLowerCase().trim() === todo.text.toLowerCase().trim()
     );
 
     if (isDuplicate) {
@@ -20,38 +24,72 @@ function TodoList() {
       return;
     }
 
-    const res = await axios.post("http://localhost:5000/api/todos", {
-      text: todo.text,
-    });
+    try {
+      const res = await axios.post("http://localhost:5000/api/todos", {
+        text: todo.text,
+      });
 
-    setTodos((prev) => [res.data, ...prev]);
+      setTodos((prev) => [res.data, ...prev]);
+
+      toast.success("Todo added successfully");
+    } catch (error) {
+      toast.error("Failed to add todo");
+      console.log(error);
+    }
   };
 
-  const updateTodo = (todoId: number, newValue: TodoType) => {
-    if (!newValue.text || /^\s*$/.test(newValue.text)) return;
+  // UPDATE TODO
+  const updateTodo = async (todoId: number, newValue: TodoType) => {
+    if (!newValue.text || /^\s*$/.test(newValue.text)) {
+      toast.error("Todo cannot be empty");
+      return;
+    }
 
-    setTodos((prev) =>
-      prev.map((item) => (item.id === todoId ? newValue : item)),
-    );
+    try {
+      const res = await axios.put(
+        `http://localhost:5000/api/todos/${todoId}`,
+        { text: newValue.text }
+      );
+
+      setTodos((prev) =>
+        prev.map((item) => (item.id === todoId ? res.data : item))
+      );
+
+      toast.success("Todo updated successfully");
+    } catch (err) {
+      toast.error("Update failed");
+      console.log(err);
+    }
   };
 
+  // DELETE TODO
   const removeTodo = async (id: number) => {
-    await axios.delete(`http://localhost:5000/api/todos/${id}`);
-    setTodos((prev) => prev.filter((t) => t.id !== id));
+    try {
+      await axios.delete(`http://localhost:5000/api/todos/${id}`);
+      setTodos((prev) => prev.filter((t) => t.id !== id));
+
+      toast.success("Todo deleted");
+    } catch (error) {
+      toast.error("Delete failed");
+      console.log(error);
+    }
   };
 
+  // COMPLETE TODO (checkbox / toggle)
   const completeTodo = (id: number) => {
     setTodos((prev) =>
       prev.map((todo) =>
-        todo.id === id ? { ...todo, isComplete: !todo.isComplete } : todo,
-      ),
+        todo.id === id ? { ...todo, isComplete: !todo.isComplete } : todo
+      )
     );
   };
 
+  // FETCH TODOS
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/todos")
-      .then((res) => setTodos(res.data));
+      .then((res) => setTodos(res.data))
+      .catch(() => toast.error("Failed to fetch todos"));
   }, []);
 
   return (

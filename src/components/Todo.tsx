@@ -35,8 +35,18 @@ const Todo = ({ todos, completeTodo, removeTodo, updateTodo }: TodoProps) => {
           className={todo.isComplete ? "todo-row complete" : "todo-row"}
           key={todo.id}
         >
+          {/* Checkbox for finished task */}
+          <input
+            type="checkbox"
+            checked={!!todo.isComplete}
+            onChange={() => completeTodo(todo.id)}
+            style={{ marginRight: "10px",cursor:"pointer"}}
+          />
+
+          {/* Todo text */}
           <div onClick={() => completeTodo(todo.id)}>{todo.text}</div>
 
+          {/* Icons */}
           <div className="icons">
             <IoClose
               onClick={() => removeTodo(todo.id)}
