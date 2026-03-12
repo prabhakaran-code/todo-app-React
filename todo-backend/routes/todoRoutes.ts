@@ -33,6 +33,30 @@ router.put("/complete/:id", (req, res) => {
   );
 });
 
+
+
+router.put("/:id", (req, res) => {
+  const { text, isComplete } = req.body;
+  const id = req.params.id;
+
+  db.query(
+    "UPDATE todos SET text = ?, isComplete = ? WHERE id = ?",
+    [text, isComplete, id],
+    (err) => {
+      if (err) {
+        console.log("Update error:", err);
+        return res.status(500).json(err);
+      }
+
+      res.json({
+        id: Number(id),
+        text,
+        isComplete
+      });
+    }
+  );
+});
+
 // ADD TODO
 router.post("/", (req: Request, res: Response) => {
   const { text } = req.body;

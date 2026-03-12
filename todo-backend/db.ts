@@ -3,7 +3,7 @@ import mysql, { Connection } from "mysql2";
 const db: Connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "429201",
   database: "react_todo_app",
 });
 
