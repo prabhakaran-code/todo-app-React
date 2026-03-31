@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import db from "../db.js";
 import { QueryError, RowDataPacket, ResultSetHeader } from "mysql2";
+import mysql from "mysql2/promise";
 
 const router = express.Router();
 
@@ -25,8 +26,9 @@ router.put("/complete/:id", (req, res) => {
         [req.params.id],
         (err, result) => {
           if (err) return res.status(500).json(err);
+           const row = result[0] as { isComplete: number };
 
-          res.json({ isComplete: result[0].isComplete });
+          res.json({ isComplete: row.isComplete });
         }
       );
     }
