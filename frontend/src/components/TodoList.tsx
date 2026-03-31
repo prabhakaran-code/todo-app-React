@@ -4,7 +4,7 @@ import Todo from "./Todo";
 import { TodoType } from "../types/todo";
 import { toast } from "react-toastify";
 import axios from "axios";
-import "../app.css";
+import "../App.css";
 import ReactPaginate from "react-paginate";
 
 import { useDispatch, useSelector } from "react-redux";
