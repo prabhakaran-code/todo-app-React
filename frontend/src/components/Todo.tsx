@@ -45,6 +45,7 @@ const Todo = ({ todos, completeTodo, removeTodo, updateTodo }: TodoProps) => {
 
           {/* Todo text */}
           <div onClick={() => completeTodo(todo.id)}>{todo.text}</div>
+          
 
           {/* Icons */}
           <div className="icons">
