@@ -1,16 +1,18 @@
 import express, { Request, Response } from "express";
 import db from "../db.js";
 import { QueryError, RowDataPacket, ResultSetHeader } from "mysql2";
-import mysql from "mysql2/promise";
 
 const router = express.Router();
 
 // GET TODOS
 router.get("/", (req: Request, res: Response) => {
-  db.query("SELECT * FROM todos", (err: QueryError | null, result: RowDataPacket[]) => {
-    if (err) return res.status(500).json(err);
-    res.json(result);
-  });
+  db.query(
+    "SELECT * FROM todos",
+    (err: QueryError | null, result: RowDataPacket[]) => {
+      if (err) return res.status(500).json(err);
+      res.json(result);
+    },
+  );
 });
 
 // UPDATE TODO
@@ -24,18 +26,27 @@ router.put("/complete/:id", (req, res) => {
       db.query(
         "SELECT isComplete FROM todos WHERE id = ?",
         [req.params.id],
-        (err, result) => {
+        (err: QueryError | null, result: RowDataPacket[]) => {
           if (err) return res.status(500).json(err);
-           const row = result[0] as { isComplete: number };
+
+          //  ADD THIS CHECK
+          if (!result || result.length === 0) {
+            return res.status(404).json({ message: "Todo not found" });
+          }
+
+          //
+          const row = result[0];
+
+          if (!row) {
+            return res.status(404).json({ message: "Todo not found" });
+          }
 
           res.json({ isComplete: row.isComplete });
-        }
+        },
       );
-    }
+    },
   );
 });
-
-
 
 router.put("/:id", (req, res) => {
   const { text, isComplete } = req.body;
@@ -53,9 +64,9 @@ router.put("/:id", (req, res) => {
       res.json({
         id: Number(id),
         text,
-        isComplete
+        isComplete,
       });
-    }
+    },
   );
 });
 
@@ -69,7 +80,7 @@ router.post("/", (req: Request, res: Response) => {
     (err: QueryError | null, result: ResultSetHeader) => {
       if (err) return res.status(500).json(err);
       res.json({ id: result.insertId, text });
-    }
+    },
   );
 });
 
@@ -81,7 +92,7 @@ router.delete("/:id", (req: Request, res: Response) => {
     (err: QueryError | null) => {
       if (err) return res.status(500).json(err);
       res.json({ message: "Deleted" });
-    }
+    },
   );
 });
 
