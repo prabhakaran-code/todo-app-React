@@ -16,7 +16,10 @@ import {
   updateTodo
 } from "../features/todos/todoSlice";
 
+
+
 function TodoList() {
+  const API = import.meta.env.VITE_API_URL;
   const dispatch = useDispatch();
   const todos = useSelector((state: RootState) => state.todos.todos);
 
@@ -43,7 +46,7 @@ function TodoList() {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/todos", {
+      const res = await axios.post(`${API}/todos`,  {
         text: todo.text
       });
 
@@ -63,8 +66,7 @@ function TodoList() {
     }
 
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/todos/${todoId}`,
+      const res = await axios.put(`${API}/todos/${todoId}`,
         { text: newValue.text }
       );
 
@@ -80,7 +82,7 @@ function TodoList() {
   // DELETE TODO
   const removeTodoHandler = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:5000/api/todos/${id}`);
+      await axios.delete(`${API}/todos/${id}`);
 
       dispatch(removeTodo(id));
 
@@ -96,8 +98,7 @@ function TodoList() {
     if (!todo) return;
 
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/todos/${id}`,
+      const res = await axios.put(`${API}/todos/${id}`,
         {
           text: todo.text,
           isComplete: !todo.isComplete
@@ -113,8 +114,7 @@ function TodoList() {
 
   // FETCH TODOS
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/todos")
+   axios.get(`${API}/todos`)
       .then((res) => dispatch(setTodos(res.data)))
       .catch(() => toast.error("Failed to fetch todos"));
   }, [dispatch]);

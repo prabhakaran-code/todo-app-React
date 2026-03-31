@@ -1,4 +1,6 @@
 import mysql, { Connection } from "mysql2";
+import dotenv from "dotenv";
+dotenv.config();
 
 const db: Connection = mysql.createConnection({
   host: process.env.DB_HOST!,
@@ -7,6 +9,7 @@ const db: Connection = mysql.createConnection({
   database: process.env.DB_NAME!,
 });
 
+console.log("DB_NAME:", process.env.DB_NAME);
 db.connect((err: mysql.QueryError | null) => {
   if (err) {
     console.error("DB connection failed", err);
