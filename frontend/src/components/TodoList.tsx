@@ -39,7 +39,7 @@ function TodoList() {
     const isDuplicate = todos.some(
       (t) => t.text.toLowerCase().trim() === todo.text.toLowerCase().trim()
     );
-
+.
     if (isDuplicate) {
       toast.error("Duplicate values not allowed");
       return;
