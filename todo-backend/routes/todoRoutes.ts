@@ -5,14 +5,20 @@ import { QueryError, RowDataPacket, ResultSetHeader } from "mysql2";
 const router = express.Router();
 
 // GET TODOS
-router.get("/", (req: Request, res: Response) => {
-  db.query(
-    "SELECT * FROM todos",
-    (err: QueryError | null, result: RowDataPacket[]) => {
-      if (err) return res.status(500).json(err);
-      res.json(result);
-    },
-  );
+// router.get("/", (req: Request, res: Response) => {
+//   db.query(
+//     "SELECT * FROM todos",
+//     (err: QueryError | null, result: RowDataPacket[]) => {
+//       if (err) return res.status(500).json(err);
+//       res.json(result);
+//     },
+//   );
+// });
+
+router.get("/", (req, res) => {
+  res.json([
+    { id: 1, text: "Test todo", isComplete: false }
+  ]);
 });
 
 // UPDATE TODO
