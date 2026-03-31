@@ -46,7 +46,7 @@ function TodoList() {
     }
 
     try {
-      const res = await axios.post(`${API}/todos`,  {
+      const res = await axios.post(`${API}/api/todos`,  {
         text: todo.text
       });
 
@@ -66,7 +66,7 @@ function TodoList() {
     }
 
     try {
-      const res = await axios.put(`${API}/todos/${todoId}`,
+      const res = await axios.put(`${API}/api/todos/${todoId}`,
         { text: newValue.text }
       );
 
@@ -82,7 +82,7 @@ function TodoList() {
   // DELETE TODO
   const removeTodoHandler = async (id: number) => {
     try {
-      await axios.delete(`${API}/todos/${id}`);
+      await axios.delete(`${API}/api/todos/${id}`);
 
       dispatch(removeTodo(id));
 
@@ -98,7 +98,7 @@ function TodoList() {
     if (!todo) return;
 
     try {
-      const res = await axios.put(`${API}/todos/${id}`,
+      const res = await axios.put(`${API}/api/todos/${id}`,
         {
           text: todo.text,
           isComplete: !todo.isComplete
@@ -114,7 +114,7 @@ function TodoList() {
 
   // FETCH TODOS
   useEffect(() => {
-   axios.get(`${API}/todos`)
+   axios.get(`${API}/api/todos`)
       .then((res) => dispatch(setTodos(res.data)))
       .catch(() => toast.error("Failed to fetch todos"));
   }, [dispatch]);
